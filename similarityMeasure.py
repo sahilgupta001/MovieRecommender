@@ -1,9 +1,22 @@
 from collections import defaultdict
 from sklearn.metrics.pairwise import cosine_similarity
+from sklearn.feature_extraction.text import CountVectorizer
 import numpy as np
+import pandas as pd
 import math
-
+from loadData import LoadData
 class Similarity:
+
+    ml = LoadData()
+
+    def Cosine_Similarity(self, data):
+        combined_features = pd.DataFrame(self.ml.combined_features(data).items(), columns = ['id', 'combined_features'])
+        vectorizer = CountVectorizer()
+        X = vectorizer.fit_transform(combined_features["combined_features"])
+        similarity_scores = cosine_similarity(X)
+        print("...done")
+        return similarity_scores
+
 
     def computeSimilarity(self, data):
         genres = self.getGenres(data)
@@ -101,8 +114,8 @@ class Similarity:
                     maxGenreID += 1
                 genreIDList.append(genreID)
             genres[movieID] = genreIDList
-            # Convert integer-encoded genre lists to bitfields that we can treat as vectors
 
+        # Convert integer-encoded genre lists to bitfields that we can treat as vectors
         for (movieID, genreIDList) in genres.items():
             bitfield = [0] * maxGenreID
             for genreID in genreIDList:

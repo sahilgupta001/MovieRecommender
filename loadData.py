@@ -6,7 +6,9 @@ class LoadData:
     ratings_path = "E:\Development work\MovieRecommendation\m2010-2019\mbollywood_ratings_2010-2019.csv"
     movies_path = "E:\Development work\MovieRecommendation\m2010-2019\mbollywood_2010-2019.csv"
     metaData_path = "E:\Development work\MovieRecommendation\m2010-2019\mbollywood_meta_2010-2019.csv"
+    movie_text_path = "E:\Development work\MovieRecommendation\m2010-2019\mbollywood_text_2010-2019.csv"
 
+    combined_data = {}
     metaData = []
     genres = {}
     def loadRatings(self):
@@ -62,3 +64,22 @@ class LoadData:
         metaData = pd.DataFrame(self.metaData, columns=['id','is_adult', 'yor', 'genres'])
         return metaData
 
+    def combined_features(self, data):
+        idList = []
+        with open(self.movie_text_path, encoding = 'ISO-8859-1', newline = '') as csvFile:
+            text_reader = csv.reader(csvFile)
+            next(text_reader)
+            for row in text_reader:
+                actor_combined = ''
+                if (row[0] in idList or row[0] == ''):
+                    continue
+                idList.append(row[0])
+                actors = row[4].split("|")
+                for actor in actors:
+                    actor_combined = actor_combined +  " " + actor + " "
+                values = data[data.id == row[0]]["genres"].values[0]
+                genres = values.split("|")
+                for genre in genres:
+                    actor_combined = actor_combined + " " + genre + " "
+                    self.combined_data[row[0]] = actor_combined
+            return self.combined_data

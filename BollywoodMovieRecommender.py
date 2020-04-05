@@ -1,5 +1,5 @@
 from loadData import LoadData
-from similarity import Similarity
+from similarityMeasure import Similarity
 
 # Function 1
 def get_index_from_id(id):
@@ -65,6 +65,7 @@ for movie in similar_movie_albums:
 #=========================================================================
 # Computing the similarity matrix for ratings and number of votes
 #=========================================================================
+
 print("\nComputing the similarity matrix for votes and ratings...")
 sim = Similarity()
 similarity_scores = sim.voteRatingSimilarity(final_data)
@@ -84,6 +85,7 @@ for movie in similar_movie_albums:
 # =========================================================================
 # Computing the combined similarity matrix
 # =========================================================================
+
 print("\nComputing the combined similarity matrix...")
 sim = Similarity()
 similarity_scores = sim.overallSimilarity(final_data)
@@ -100,16 +102,22 @@ for movie in similar_movie_albums:
     if (i >= 50):
         break
 
+# =========================================================================
+# Computing the cosine similarity matrix
+# =========================================================================
 
+print("Calculating cosine similarity by combining actors and genres...")
+similarity_scores = sim.Cosine_Similarity(final_data)
 
+print("\nPreparing recommendation List...")
+movie_index = get_index_from_id(movie_user_likes)
+similar_movie_albums = sorted(list(enumerate(similarity_scores[int(movie_index)])), key=lambda x: x[1], reverse=True)
 
-
-
-        # def combine_features(row):
-        #     return str(row["ratings"]) + " " + str(row["votes"]) + " " + str(row["yor"]) + " " + str(row["is_adult"])
-        #
-        # final_data["combined_features"] = final_data.apply(combine_features, axis = 1)
-        # vectorizer = CountVectorizer()
-        # X = vectorizer.fit_transform(final_data["combined_features"])
-        #
-        # similarity_scores = cosine_similarity(X)
+print("\nOn cosine similarity basis")
+print("\nWe Recommend...")
+i = 0
+for movie in similar_movie_albums:
+    print(get_title_from_index(movie[0]))
+    i += 1
+    if (i >= 50):
+        break
