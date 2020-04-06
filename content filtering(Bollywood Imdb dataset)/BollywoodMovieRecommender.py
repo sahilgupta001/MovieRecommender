@@ -105,7 +105,6 @@ for movie in similar_movie_albums:
 # =========================================================================
 # Computing the cosine similarity matrix
 # =========================================================================
-
 print("Calculating cosine similarity by combining actors and genres...")
 similarity_scores = sim.Cosine_Similarity(final_data)
 
